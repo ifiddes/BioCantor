@@ -1,6 +1,7 @@
 """
 Test exporting FASTA files from various kinds of collections.
 """
+
 from biocantor.io.fasta.fasta import collection_to_fasta
 from biocantor.io.genbank.parser import parse_genbank
 from biocantor.io.parser import ParsedAnnotationRecord

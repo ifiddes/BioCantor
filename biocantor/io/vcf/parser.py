@@ -4,6 +4,7 @@ Generic VCF parser. This is the default implementation.
 This implementation uses random UUIDs, so that every `Variant` is unique and maps 1-1 to the `VariantInterval`
 produced.
 """
+
 import itertools
 import warnings
 import vcf

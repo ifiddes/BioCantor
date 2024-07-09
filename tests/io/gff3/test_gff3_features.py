@@ -1,6 +1,7 @@
 """
 Tests for writing and reading feature intervals.
 """
+
 import pytest
 from biocantor.gene.biotype import Biotype
 from biocantor.gene.cds_frame import CDSFrame

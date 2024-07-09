@@ -1,6 +1,7 @@
 """
 Test static methods on the base classes in biocantor.gene.interval
 """
+
 import pytest
 
 from biocantor.exc import (

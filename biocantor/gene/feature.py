@@ -3,6 +3,7 @@ Object representation of features. Includes an abstract feature class that is al
 
 Each object is capable of exporting itself to BED and GFF3.
 """
+
 from functools import reduce
 from typing import Optional, Any, Dict, List, Set, Iterable, Iterator, Hashable, Union, TYPE_CHECKING, Type
 from uuid import UUID

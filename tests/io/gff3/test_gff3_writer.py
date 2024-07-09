@@ -1,6 +1,7 @@
 """
 Test writing GFF3 files.
 """
+
 import pytest
 
 from biocantor.io.genbank.parser import parse_genbank

@@ -5,6 +5,7 @@ are digested.
 TODO: The current implementation of this has not been profiled and likely has room for optimization that could improve
     performance on larger datasets.
 """
+
 import hashlib
 from typing import Dict, Hashable, Any, List, Set, Iterable
 from uuid import UUID

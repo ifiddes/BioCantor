@@ -1,6 +1,7 @@
 """
 Prove consistent hashing across instances even with unordered datatypes.
 """
+
 import pytest
 from biocantor.util.hashing import digest_object, _encode_object_for_digest
 from uuid import UUID
