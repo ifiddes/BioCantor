@@ -20,6 +20,8 @@ def parse_bed(bed: Path) -> Iterable[ParsedAnnotationRecord]:
     genes = defaultdict(list)
     with open(bed) as fh:
         for row in fh:
+            if row.startswith("#") or row.startswith("track "):
+                continue
             row = row.rstrip().split("\t")
             if len(row) == 3:
                 tx = dict(
