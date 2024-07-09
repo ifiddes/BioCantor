@@ -192,7 +192,7 @@ class TestBedWriter:
                                                     ("strand", "PLUS"),
                                                     ("cds_starts", [4, 7, 12]),
                                                     ("cds_ends", [6, 10, 13]),
-                                                    ("cds_frames", ["ZERO"]),
+                                                    ("cds_frames", ["ZERO", "TWO", "TWO"]),
                                                     ("qualifiers", None),
                                                     ("is_primary_tx", None),
                                                     ("transcript_id", None),
