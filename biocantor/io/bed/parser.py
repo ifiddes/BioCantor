@@ -27,14 +27,14 @@ def parse_bed(bed: Path) -> Iterable[ParsedAnnotationRecord]:
                 tx = dict(
                     exon_starts=[int(row[1])],
                     exon_ends=[int(row[2])],
-                    strand=Strand.PLUS,
+                    strand=Strand.PLUS.name,
                     sequence_name=row[0],
                 )
             elif len(row) == 6:
                 tx = dict(
                     exon_starts=[int(row[1])],
                     exon_ends=[int(row[2])],
-                    strand=Strand.from_symbol(row[5]),
+                    strand=Strand.from_symbol(row[5]).name,
                     sequence_name=row[0],
                     transcript_symbol=row[3],
                 )
