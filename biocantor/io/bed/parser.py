@@ -50,16 +50,21 @@ def parse_bed(bed: Path) -> Iterable[ParsedAnnotationRecord]:
                 exon_interval = CompoundInterval(exon_starts, exon_ends, strand)
                 cds_interval = SingleInterval(thick_start, thick_end, strand)
                 cds_blocks = exon_interval.intersection(cds_interval)
-                cds_starts = [x.start for x in cds_blocks.blocks]
-                cds_ends = [x.end for x in cds_blocks.blocks]
-                frames = CDSInterval.construct_frames_from_location(cds_interval)
+
+                if cds_blocks.is_empty:
+                    cds_frames = cds_starts = cds_ends = None
+                else:
+                    cds_frames = [x.name for x in CDSInterval.construct_frames_from_location(cds_blocks)]
+                    cds_starts = [x.start for x in cds_blocks.blocks]
+                    cds_ends = [x.end for x in cds_blocks.blocks]
+
                 tx = dict(
                     exon_starts=exon_starts,
                     exon_ends=exon_ends,
                     strand=strand.name,
                     cds_starts=cds_starts,
                     cds_ends=cds_ends,
-                    cds_frames=[x.name for x in frames],
+                    cds_frames=cds_frames,
                     transcript_symbol=row[3],
                     sequence_name=row[0],
                 )

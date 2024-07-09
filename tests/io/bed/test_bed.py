@@ -192,7 +192,7 @@ class TestBedWriter:
                                                     ("strand", "PLUS"),
                                                     ("cds_starts", [4, 7, 12]),
                                                     ("cds_ends", [6, 10, 13]),
-                                                    ("cds_frames", ["ZERO"]),
+                                                    ("cds_frames", ["ZERO", "TWO", "TWO"]),
                                                     ("qualifiers", None),
                                                     ("is_primary_tx", None),
                                                     ("transcript_id", None),
@@ -234,6 +234,20 @@ class TestBedWriter:
                 ]
             ),
         ]
+
+    def test_spliced(self, tmp_path):
+        tmp_bed = tmp_path / "tmp.bed"
+        with open(tmp_bed, "w") as fh:
+            fh.write("chr1\t926007\t930198\tENSG00000187634|SAMD11|ce0f9f1\t0\t-\t926007\t930198\t0\t2\t6,44\t0,4147\n")
+        recs = parse_bed(tmp_bed)
+        _ = list(recs)[0].to_annotation_collection()
+
+    def test_no_cds(self, tmp_path):
+        tmp_bed = tmp_path / "tmp.bed"
+        with open(tmp_bed, "w") as fh:
+            fh.write("chr1\t944599\t944649\tENSG00000188976|NOC2L|199f6ec\t0\t+\t0\t0\t0\t1\t50\t0\n")
+        recs = parse_bed(tmp_bed)
+        _ = list(recs)[0].to_annotation_collection()
 
     def test_parse_bed_fasta(self, tmp_path):
         tmp_bed = tmp_path / "tmp.bed"
