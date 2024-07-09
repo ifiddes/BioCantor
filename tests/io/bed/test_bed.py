@@ -2,13 +2,16 @@
 FeatureIntervals have the ability to write to BED.
 
 """
-import pytest
 
+import pytest
+from collections import OrderedDict
 from biocantor.gene.cds_frame import CDSFrame
 from biocantor.io.bed import RGB
+from biocantor.io.bed.parser import parse_bed, parse_bed_fasta
 from biocantor.io.models import (
     TranscriptIntervalModel,
     FeatureIntervalModel,
+    AnnotationCollectionModel,
 )
 from biocantor.location.strand import Strand
 from biocantor.util.hashing import digest_object
@@ -102,3 +105,146 @@ class TestBedWriter:
         model = TranscriptIntervalModel.Schema().load(tx)
         obj = model.to_transcript_interval()
         assert str(obj.to_bed12(score, rgb, name)) == "\t".join(expected)
+
+    def test_parse_bed(self, tmp_path):
+        tmp_bed = tmp_path / "tmp.bed"
+        with open(tmp_bed, "w") as fh:
+            for tx in [self.tx1, self.tx2]:
+                model = TranscriptIntervalModel.Schema().load(tx)
+                obj = model.to_transcript_interval()
+                print(obj.to_bed12(), file=fh)
+        parsed = list(parse_bed(tmp_bed))
+        assert AnnotationCollectionModel.Schema().dump([x.annotation for x in parsed], many=True) == [
+            OrderedDict(
+                [
+                    ("feature_collections", []),
+                    (
+                        "genes",
+                        [
+                            OrderedDict(
+                                [
+                                    (
+                                        "transcripts",
+                                        [
+                                            OrderedDict(
+                                                [
+                                                    ("exon_starts", [2]),
+                                                    ("exon_ends", [18]),
+                                                    ("strand", "PLUS"),
+                                                    ("cds_starts", [5]),
+                                                    ("cds_ends", [9]),
+                                                    ("cds_frames", ["ZERO"]),
+                                                    ("qualifiers", None),
+                                                    ("is_primary_tx", None),
+                                                    ("transcript_id", None),
+                                                    ("protein_id", None),
+                                                    ("product", None),
+                                                    ("transcript_symbol", "None"),
+                                                    ("transcript_type", None),
+                                                    ("sequence_name", "chr1"),
+                                                    ("sequence_guid", None),
+                                                    ("transcript_interval_guid", None),
+                                                    ("transcript_guid", None),
+                                                ]
+                                            )
+                                        ],
+                                    ),
+                                    ("gene_id", None),
+                                    ("gene_symbol", None),
+                                    ("gene_type", None),
+                                    ("locus_tag", None),
+                                    ("qualifiers", None),
+                                    ("sequence_name", "chr1"),
+                                    ("sequence_guid", None),
+                                    ("gene_guid", None),
+                                ]
+                            )
+                        ],
+                    ),
+                    ("variant_collections", []),
+                    ("name", None),
+                    ("id", None),
+                    ("sequence_name", "chr1"),
+                    ("sequence_guid", None),
+                    ("sequence_path", None),
+                    ("qualifiers", None),
+                    ("start", None),
+                    ("end", None),
+                    ("completely_within", None),
+                    ("parent_or_seq_chunk_parent", None),
+                ]
+            ),
+            OrderedDict(
+                [
+                    ("feature_collections", []),
+                    (
+                        "genes",
+                        [
+                            OrderedDict(
+                                [
+                                    (
+                                        "transcripts",
+                                        [
+                                            OrderedDict(
+                                                [
+                                                    ("exon_starts", [2, 7, 12]),
+                                                    ("exon_ends", [6, 10, 15]),
+                                                    ("strand", "PLUS"),
+                                                    ("cds_starts", [4, 7, 12]),
+                                                    ("cds_ends", [6, 10, 13]),
+                                                    ("cds_frames", ["ZERO"]),
+                                                    ("qualifiers", None),
+                                                    ("is_primary_tx", None),
+                                                    ("transcript_id", None),
+                                                    ("protein_id", None),
+                                                    ("product", None),
+                                                    ("transcript_symbol", "name"),
+                                                    ("transcript_type", None),
+                                                    ("sequence_name", "None"),
+                                                    ("sequence_guid", None),
+                                                    ("transcript_interval_guid", None),
+                                                    ("transcript_guid", None),
+                                                ]
+                                            )
+                                        ],
+                                    ),
+                                    ("gene_id", None),
+                                    ("gene_symbol", None),
+                                    ("gene_type", None),
+                                    ("locus_tag", None),
+                                    ("qualifiers", None),
+                                    ("sequence_name", "None"),
+                                    ("sequence_guid", None),
+                                    ("gene_guid", None),
+                                ]
+                            )
+                        ],
+                    ),
+                    ("variant_collections", []),
+                    ("name", None),
+                    ("id", None),
+                    ("sequence_name", "None"),
+                    ("sequence_guid", None),
+                    ("sequence_path", None),
+                    ("qualifiers", None),
+                    ("start", None),
+                    ("end", None),
+                    ("completely_within", None),
+                    ("parent_or_seq_chunk_parent", None),
+                ]
+            ),
+        ]
+
+    def test_parse_bed_fasta(self, tmp_path):
+        tmp_bed = tmp_path / "tmp.bed"
+        tmp_fasta = tmp_path / "tmp.fasta"
+        with open(tmp_bed, "w") as fh:
+            model = TranscriptIntervalModel.Schema().load(self.tx1)
+            obj = model.to_transcript_interval()
+            print(obj.to_bed12(), file=fh)
+        with open(tmp_fasta, "w") as fh:
+            fh.write(">chr1\nATGCATGCATGAGAAGACCCGAGTAA\n")
+        parsed = list(parse_bed_fasta(tmp_bed, tmp_fasta))
+        assert len(parsed) == 1
+        rec = parsed[0].to_annotation_collection()
+        assert str(rec.genes[0].get_primary_transcript().get_spliced_sequence()) == "GCATGCATGAGAAGAC"

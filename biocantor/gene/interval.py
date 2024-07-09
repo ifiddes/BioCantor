@@ -1,6 +1,7 @@
 """
 This module contains abstract base classes for interval types and interval collection types.
 """
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List, Union, Dict, Hashable, Set, Optional, Any, Iterable, Iterator, TypeVar, TYPE_CHECKING

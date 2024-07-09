@@ -20,6 +20,7 @@ default for this parsing module.
 The generic parsing function that interprets the BioPython results to BioCantor data models is implemented in
 :meth:`GeneFeature.to_gene_model()`. This function can be over-ridden to provide custom parsing implementations.
 """
+
 import itertools
 import pathlib
 import warnings

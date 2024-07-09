@@ -51,6 +51,10 @@ class BED3:
     def __str__(self) -> str:
         return ",".join(str(col) for col in astuple(self))
 
+    @classmethod
+    def from_row(cls, row: List[str]):
+        return cls(row[0], int(row[1]), int(row[2]))
+
 
 @dataclass
 class BED6(BED3):
@@ -62,6 +66,10 @@ class BED6(BED3):
 
     def __str__(self) -> str:
         return "\t".join(map(str, [self.chrom, self.start, self.end, self.name, self.score, self.strand.to_symbol()]))
+
+    @classmethod
+    def from_row(cls, row: List[str]):
+        return cls(row[0], int(row[1]), int(row[2]), row[3], int(row[4]), Strand.from_symbol(row[5]))
 
 
 @dataclass
@@ -94,4 +102,21 @@ class BED12(BED6):
                     ",".join(map(str, self.block_starts)),
                 ]
             )
+        )
+
+    @classmethod
+    def from_row(cls, row: List[str]):
+        return cls(
+            row[0],
+            int(row[1]),
+            int(row[2]),
+            row[3],
+            int(row[4]),
+            Strand.from_symbol(row[5]),
+            int(row[6]),
+            int(row[7]),
+            RGB(*list(map(int, row[8].split(",")))),
+            int(row[9]),
+            list(map(int, row[10].split(","))),
+            list(map(int, row[11].split(","))),
         )

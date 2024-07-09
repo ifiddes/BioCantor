@@ -10,6 +10,7 @@ to write custom parsers.
 Additionally, the lower-level interface to :mod:`gffutils` can be tweaked by adjusting the :class:`GffutilsParseArgs`
 dataclass to adjust the arguments passed to :mod:`gffutils`.
 """
+
 import logging
 from dataclasses import dataclass
 from collections import Counter

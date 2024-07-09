@@ -3,6 +3,7 @@ Object representation of Transcripts.
 
 Each object is capable of exporting itself to BED and GFF3.
 """
+
 from typing import Optional, Any, Dict, Iterable, Iterator, Hashable, Set, List, Union, TYPE_CHECKING, Type
 from uuid import UUID
 

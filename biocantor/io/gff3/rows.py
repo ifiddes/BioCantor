@@ -1,6 +1,7 @@
 """
 Contains information on how to manage GFF row data. Enforces GFF3 specification rules.
 """
+
 from abc import ABC
 import re
 from warnings import warn

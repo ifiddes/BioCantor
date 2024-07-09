@@ -10,6 +10,7 @@ pairs where you have ``gene`` followed by ``[CDS, tRNA, rRNA, ...]``.
 2. Eukaryotic -- a more standard gene model, where the top level is always called ``gene``, then there is a child
 ``[mRNA, tRNA, ...]`` and if the case where the child is ``mRNA``, then there are ``CDS`` features.
 """
+
 import warnings
 from pathlib import Path
 from typing import Iterable, List, Optional, TextIO, Hashable, Union, Dict, Any

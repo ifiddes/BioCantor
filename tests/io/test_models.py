@@ -3,6 +3,7 @@ Test importing and exporting AnnotationCollectionModel objects from JSON, with a
 
 All of these tests are based on the INSC1003.gbk file.
 """
+
 import pytest
 import json
 from uuid import UUID

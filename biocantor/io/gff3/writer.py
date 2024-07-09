@@ -1,6 +1,7 @@
 """
 Functions for writing GFF3. Capable of writing GFF3 + FASTA.
 """
+
 from typing import Iterable, Optional, TextIO
 
 from biocantor.gene.collections import AnnotationCollection

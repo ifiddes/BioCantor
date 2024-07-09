@@ -1,6 +1,7 @@
 """
 Enumeration utilities.
 """
+
 from enum import Enum
 
 

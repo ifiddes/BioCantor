@@ -4,6 +4,7 @@ This module contains code shared between the Genbank and GFF3 parser for extract
 These regexes, enums and functions are used to identify primary name and ID values, as well as pull
 out possible feature types.
 """
+
 import itertools
 import re
 import string

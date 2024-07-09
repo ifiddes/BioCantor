@@ -4,6 +4,7 @@ Test exporting to NCBI TBL format.
 All of these TBL files have been validated to pass the tbl2asn error validator tool. This tool is not easy
 to acquire and so is not packaged for these unit tests.
 """
+
 import pytest
 from biocantor.io.genbank.parser import parse_genbank
 from biocantor.io.gff3.parser import parse_gff3_embedded_fasta

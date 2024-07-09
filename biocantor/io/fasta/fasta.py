@@ -1,6 +1,7 @@
 """
 Functions for handling FASTA files. Builds BioCantor sequence objects from various types of FASTA files.
 """
+
 from typing import Optional, Dict, TextIO, Iterable
 
 from Bio import SeqIO

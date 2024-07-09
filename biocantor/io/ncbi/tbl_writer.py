@@ -3,6 +3,7 @@ Write BioCantor data models to the NCBI .tbl format.
 
 The .tbl format is used for NCBI genome submission, and can be validated with the tool ``tbl2asn``.
 """
+
 import itertools
 import random
 import re

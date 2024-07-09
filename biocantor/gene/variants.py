@@ -42,6 +42,7 @@ A deletion from 13 to 15 without padding:
     deletion_13_15 = VariantInterval(start=13, end=15, sequence="", variant_type="deletion")
 
 """
+
 from typing import Optional, Dict, Hashable, Any, Iterable, Iterator, Set, List, Union
 from uuid import UUID
 

@@ -2,6 +2,7 @@
 Core parser functionality. Contains the dataclass :class:`ParsedAnnotationRecord` which wraps annotations produced
 by any of the parser with optional sequence information.
 """
+
 from dataclasses import dataclass
 from typing import Optional, Iterable, TextIO, Union
 from uuid import UUID

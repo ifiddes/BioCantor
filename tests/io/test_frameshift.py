@@ -1,6 +1,7 @@
 """
 Prove that we can handle -1 frameshifts properly when modeled in the input data.
 """
+
 from biocantor.io.genbank.parser import parse_genbank
 from biocantor.io.gff3.parser import parse_gff3_embedded_fasta
 from biocantor.io.parser import ParsedAnnotationRecord

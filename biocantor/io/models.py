@@ -2,6 +2,7 @@
 Data models. These models allow for validation of inputs to a BioCantor model, acting as a JSON schema for serializing
 and deserializing the models.
 """
+
 from typing import List, Optional, ClassVar, Type, Dict, Union
 from dataclasses import field
 from uuid import UUID
