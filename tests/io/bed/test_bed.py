@@ -235,6 +235,13 @@ class TestBedWriter:
             ),
         ]
 
+    def test_spliced(self, tmp_path):
+        tmp_bed = tmp_path / "tmp.bed"
+        with open(tmp_bed, "w") as fh:
+            fh.write('chr1\t926007\t930198\tENSG00000187634|SAMD11|ce0f9f1\t0\t-\t926007\t930198\t0\t2\t6,44\t0,4147\n')
+        recs = parse_bed(tmp_bed)
+        _ = list(recs)[0].to_annotation_collection()
+
     def test_parse_bed_fasta(self, tmp_path):
         tmp_bed = tmp_path / "tmp.bed"
         tmp_fasta = tmp_path / "tmp.fasta"

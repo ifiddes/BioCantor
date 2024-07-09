@@ -52,7 +52,7 @@ def parse_bed(bed: Path) -> Iterable[ParsedAnnotationRecord]:
                 cds_blocks = exon_interval.intersection(cds_interval)
                 cds_starts = [x.start for x in cds_blocks.blocks]
                 cds_ends = [x.end for x in cds_blocks.blocks]
-                frames = CDSInterval.construct_frames_from_location(cds_interval)
+                frames = CDSInterval.construct_frames_from_location(cds_blocks)
                 tx = dict(
                     exon_starts=exon_starts,
                     exon_ends=exon_ends,
