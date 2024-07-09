@@ -242,6 +242,13 @@ class TestBedWriter:
         recs = parse_bed(tmp_bed)
         _ = list(recs)[0].to_annotation_collection()
 
+    def test_no_cds(self, tmp_path):
+        tmp_bed = tmp_path / "tmp.bed"
+        with open(tmp_bed, "w") as fh:
+            fh.write("chr1\t944599\t944649\tENSG00000188976|NOC2L|199f6ec\t0\t+\t0\t0\t0\t1\t50\t0\n")
+        recs = parse_bed(tmp_bed)
+        _ = list(recs)[0].to_annotation_collection()
+
     def test_parse_bed_fasta(self, tmp_path):
         tmp_bed = tmp_path / "tmp.bed"
         tmp_fasta = tmp_path / "tmp.fasta"
