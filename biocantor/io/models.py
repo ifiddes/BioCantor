@@ -95,6 +95,7 @@ class FeatureIntervalModel(BaseModel):
     feature_name: Optional[str] = None
     feature_id: Optional[str] = None
     is_primary_feature: Optional[bool] = None
+    parent_or_seq_chunk_parent: Optional[ParentModel] = None
 
     def to_feature_interval(
         self,
@@ -104,6 +105,9 @@ class FeatureIntervalModel(BaseModel):
 
         A :class:`~biocantor.parent.Parent` can be provided to allow the sequence-retrieval functions to work.
         """
+        if not parent_or_seq_chunk_parent and self.parent_or_seq_chunk_parent:
+            parent_or_seq_chunk_parent = self.parent_or_seq_chunk_parent.to_parent()
+
         return FeatureInterval(
             self.interval_starts,
             self.interval_ends,
@@ -149,6 +153,7 @@ class TranscriptIntervalModel(BaseModel):
     sequence_guid: Optional[UUID] = None
     transcript_interval_guid: Optional[UUID] = None
     transcript_guid: Optional[UUID] = None
+    parent_or_seq_chunk_parent: Optional[ParentModel] = None
 
     def to_transcript_interval(
         self,
@@ -158,6 +163,9 @@ class TranscriptIntervalModel(BaseModel):
 
         A :class:`~biocantor.parent.Parent can be provided to allow the sequence-retrieval functions to work.
         """
+
+        if not parent_or_seq_chunk_parent and self.parent_or_seq_chunk_parent:
+            parent_or_seq_chunk_parent = self.parent_or_seq_chunk_parent.to_parent()
 
         return TranscriptInterval(
             exon_starts=self.exon_starts,
@@ -245,6 +253,7 @@ class GeneIntervalModel(BaseModel):
     sequence_name: Optional[str] = None
     sequence_guid: Optional[UUID] = None
     gene_guid: Optional[UUID] = None
+    parent_or_seq_chunk_parent: Optional[ParentModel] = None
 
     def to_gene_interval(self, parent_or_seq_chunk_parent: Optional[Parent] = None) -> GeneInterval:
         """Produce a :class:`~biocantor.gene.collections.GeneInterval` from a :class:`GeneIntervalModel`.
@@ -253,6 +262,9 @@ class GeneIntervalModel(BaseModel):
         """
 
         transcripts = [tx.to_transcript_interval(parent_or_seq_chunk_parent) for tx in self.transcripts]
+
+        if not parent_or_seq_chunk_parent and self.parent_or_seq_chunk_parent:
+            parent_or_seq_chunk_parent = self.parent_or_seq_chunk_parent.to_parent()
 
         return GeneInterval(
             transcripts=transcripts,
@@ -291,11 +303,15 @@ class FeatureIntervalCollectionModel(BaseModel):
     sequence_guid: Optional[UUID] = None
     feature_collection_guid: Optional[UUID] = None
     qualifiers: Optional[Dict[str, List[Union[str, int, bool, float]]]] = None
+    parent_or_seq_chunk_parent: Optional[ParentModel] = None
 
     def to_feature_collection(self, parent_or_seq_chunk_parent: Optional[Parent] = None) -> FeatureIntervalCollection:
         """Produce a feature collection from a :class:`FeatureIntervalCollectionModel`."""
 
         feature_intervals = [feat.to_feature_interval(parent_or_seq_chunk_parent) for feat in self.feature_intervals]
+
+        if not parent_or_seq_chunk_parent and self.parent_or_seq_chunk_parent:
+            parent_or_seq_chunk_parent = self.parent_or_seq_chunk_parent.to_parent()
 
         return FeatureIntervalCollection(
             feature_intervals=feature_intervals,

@@ -1,4 +1,5 @@
 import pytest
+import pickle
 
 from biocantor.exc import (
     InvalidCDSIntervalError,
@@ -909,6 +910,14 @@ class TestTranscript:
     def test_has_sequence(self, parent, expected):
         interval = e3_spliced.to_transcript_interval(parent_or_seq_chunk_parent=parent)
         assert interval.has_sequence == expected
+
+    @pytest.mark.parametrize("parent", [parent_genome2_1_15])
+    def test_pickling(self, parent):
+        obj = e3_spliced.to_transcript_interval(parent)
+        obj_str = pickle.dumps(obj)
+        new_obj = pickle.loads(obj_str)
+        assert obj.to_dict() == new_obj.to_dict()
+        assert obj.get_reference_sequence() == new_obj.get_reference_sequence()
 
 
 class TestTranscriptWithoutModel:

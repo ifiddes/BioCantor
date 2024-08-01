@@ -31,7 +31,6 @@ from biocantor.gene.variants import VariantIntervalCollection, VariantInterval
 from biocantor.io.gff3.rows import GFFRow, GTFRow
 from biocantor.location import SingleInterval, EmptyLocation, Strand
 from biocantor.parent import Parent, SequenceType
-from biocantor.sequence import Alphabet
 from biocantor.util.bins import bins
 from biocantor.util.hashing import digest_object
 
@@ -356,75 +355,8 @@ class AnnotationCollection(AbstractFeatureIntervalCollection):
         but this will be overridden by anything passed to the parameter.
         """
 
-        def extract_parent_or_seq_chunk_parent_from_parent_dict(parent_dict: Dict[str, Any]) -> Optional[Parent]:
-            """
-            Extract a ``parent_or_seq_chunk_parent`` from a dictionary representation. This function is called
-            if no ``parent_or_seq_chunk_parent`` is provided explicitly to ``from_dict``.
-
-            NOTE: This function modifies the contents of ``parent_dict``. It is expected that it is only called
-            from ``convert_parent_dict_to_parent``, which copies ``parent_dict`` out of the input ``vals``
-            dictionary.
-
-            When the original :class:`AnnotationCollection` was exported to dictionary, it may or may not have had
-            a ``parent_or_seq_chunk_parent``, and that :class:`~biocantor.parent.Parent` may or may not have had
-            any sequence. The sequence may or may not have been a sequence-chunk.
-
-            This function first checks for the presence of any sequence information, then infers if the sequence
-            was a chunk or not.
-            """
-            if parent_dict.get("seq"):
-                # have to import here to avoid circular imports
-                from biocantor.io.parser import seq_chunk_to_parent, seq_to_parent
-
-                # use dictionary to prevent seq_to_parent or seq_chunk_to_parent from retaining their default parameters
-                if parent_dict.get("seq_type") and parent_dict["seq_type"] == SequenceType.SEQUENCE_CHUNK:
-                    fn = seq_chunk_to_parent
-                    # not an argument to seq_chunk_to_parent because it is implicit
-                    del parent_dict["seq_type"]
-                else:
-                    # seq_to_parent uses slightly different kwargs, unfortunately
-                    fn = seq_to_parent
-                    parent_dict["seq_id"] = parent_dict["sequence_name"]
-                    # remove incorrectly named or invalid parameters
-                    parent_dict = {
-                        k: v
-                        for k, v in parent_dict.items()
-                        if k not in ["sequence_name", "type", "start", "end", "strand"]
-                    }
-                parent_or_seq_chunk_parent = fn(**parent_dict)
-            elif "seq_type" in parent_dict or "sequence_name" in parent_dict:
-                # the previous AnnotationCollection had a sequenceless Parent
-                parent_or_seq_chunk_parent = Parent(
-                    id=parent_dict.get("sequence_name"), sequence_type=parent_dict.get("seq_type")
-                )
-            else:
-                parent_or_seq_chunk_parent = None
-            return parent_or_seq_chunk_parent
-
-        def convert_parent_dict_to_parent(vals: Dict[str, Any]) -> Optional[Parent]:
-            """Converts the optional dictionary representation of a ``parent_or_seq_chunk_parent`` to
-            a Parent object.
-
-            NOTE: This function copies the input dictionary, stripping out null values.
-            """
-            # copy the input parent dictionary, stripping out null values
-            if "parent_or_seq_chunk_parent" in vals and vals["parent_or_seq_chunk_parent"] is not None:
-                parent_dict = {k: v for k, v in vals["parent_or_seq_chunk_parent"].items() if v is not None}
-            else:
-                parent_dict = {}
-
-            if parent_dict.get("alphabet"):
-                parent_dict["alphabet"] = Alphabet[parent_dict["alphabet"]]
-            if parent_dict.get("strand"):
-                parent_dict["strand"] = Strand[parent_dict["strand"]]
-            if parent_dict.get("type"):
-                parent_dict["seq_type"] = SequenceType.sequence_type_str_to_type(parent_dict["type"])
-                del parent_dict["type"]
-
-            return extract_parent_or_seq_chunk_parent_from_parent_dict(parent_dict)
-
         if not parent_or_seq_chunk_parent and "parent_or_seq_chunk_parent" in vals:
-            parent_or_seq_chunk_parent = convert_parent_dict_to_parent(vals)
+            parent_or_seq_chunk_parent = AnnotationCollection.convert_parent_dict_to_parent(vals)
 
         return AnnotationCollection(
             genes=(

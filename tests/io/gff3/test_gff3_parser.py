@@ -71,6 +71,7 @@ class TestGff3Parser:
             "sequence_guid": None,
             "transcript_interval_guid": None,
             "transcript_guid": None,
+            "parent_or_seq_chunk_parent": None,
         }
 
     def test_parse_sgce(self, test_data_dir):

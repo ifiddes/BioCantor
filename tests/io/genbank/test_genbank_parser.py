@@ -626,6 +626,7 @@ class TestGenBankFeatures:
                                                 ("feature_name", "overlapping_ncrna_opposite_strand"),
                                                 ("feature_id", None),
                                                 ("is_primary_feature", False),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -641,6 +642,7 @@ class TestGenBankFeatures:
                                     "qualifiers",
                                     {"name": ["overlapping_ncrna_opposite_strand"], "note": ["not a joined interval"]},
                                 ),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -662,6 +664,7 @@ class TestGenBankFeatures:
                                                 ("feature_name", "joined_feature_plus_strand"),
                                                 ("feature_id", None),
                                                 ("is_primary_feature", False),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -674,6 +677,7 @@ class TestGenBankFeatures:
                                 ("sequence_guid", None),
                                 ("feature_collection_guid", "a268a62a-59d2-33ec-0b57-37682b71c2d4"),
                                 ("qualifiers", {"name": ["joined_feature_plus_strand"]}),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -701,6 +705,7 @@ class TestGenBankFeatures:
                                                 ("feature_name", "joined_feature_minus_strand"),
                                                 ("feature_id", None),
                                                 ("is_primary_feature", False),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -716,6 +721,7 @@ class TestGenBankFeatures:
                                     "qualifiers",
                                     {"name": ["joined_feature_minus_strand"], "note": ["overlaps last feature"]},
                                 ),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -737,6 +743,7 @@ class TestGenBankFeatures:
                                                 ("feature_name", "unjoined_minus_strand"),
                                                 ("feature_id", None),
                                                 ("is_primary_feature", False),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -749,6 +756,7 @@ class TestGenBankFeatures:
                                 ("sequence_guid", None),
                                 ("feature_collection_guid", "8aac966f-963c-94e3-ddae-a3ac7654e266"),
                                 ("qualifiers", {"name": ["unjoined_minus_strand"]}),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                     ],
@@ -788,6 +796,7 @@ class TestGenBankFeatures:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "7335bd29-8f4b-131b-3628-965728adfa23"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -800,6 +809,7 @@ class TestGenBankFeatures:
                                 ("sequence_name", "CM021111.1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "ebf02008-e818-1551-697e-e9d015e06d7a"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         )
                     ],
@@ -921,6 +931,7 @@ class TestSortedParser:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "059ff890-0a7c-0efd-23fb-301f8d35c31f"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -933,6 +944,7 @@ class TestSortedParser:
                                 ("sequence_name", "FEPOIHMA_1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "725d632a-3069-0bb1-417f-2a558ab0043b"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -959,6 +971,7 @@ class TestSortedParser:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "0b534e84-512b-230d-8de1-90fc57c644b7"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -971,6 +984,7 @@ class TestSortedParser:
                                 ("sequence_name", "FEPOIHMA_1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "377f60d8-bc3f-959a-1fc5-6b3a7af00132"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -997,6 +1011,7 @@ class TestSortedParser:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "6138a160-a59a-132f-0f8b-cd2666e2c03f"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -1009,6 +1024,7 @@ class TestSortedParser:
                                 ("sequence_name", "FEPOIHMA_1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "50e31c78-f5c7-3803-1311-b8d7e12c720e"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -1035,6 +1051,7 @@ class TestSortedParser:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "cbb87015-fb21-5fb1-f4b8-1cc560fcec78"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -1047,6 +1064,7 @@ class TestSortedParser:
                                 ("sequence_name", "FEPOIHMA_1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "8bac45cf-d105-2f35-b0e1-afab36a6ccdd"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                     ],
@@ -1099,6 +1117,7 @@ class TestSortedParser:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "c878c7a1-5a83-e846-b331-967b34f40a9b"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -1111,6 +1130,7 @@ class TestSortedParser:
                                 ("sequence_name", "CM021111.1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "89f19909-0955-72a6-c04b-3a2cc3dfc66d"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -1143,6 +1163,7 @@ class TestSortedParser:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "b0adbc68-ed5e-fe54-fce7-59fb42ddc206"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -1155,6 +1176,7 @@ class TestSortedParser:
                                 ("sequence_name", "CM021111.1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "e1adb093-d865-0c67-da19-08aa5c188cc3"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                         OrderedDict(
@@ -1181,6 +1203,7 @@ class TestSortedParser:
                                                 ("sequence_guid", None),
                                                 ("transcript_interval_guid", "5a379323-210e-9acd-b9a5-d2dd4a843c27"),
                                                 ("transcript_guid", None),
+                                                ("parent_or_seq_chunk_parent", None),
                                             ]
                                         )
                                     ],
@@ -1193,6 +1216,7 @@ class TestSortedParser:
                                 ("sequence_name", "CM021111.1"),
                                 ("sequence_guid", None),
                                 ("gene_guid", "fbc56e86-ab99-b4f5-f8f9-655ec522340e"),
+                                ("parent_or_seq_chunk_parent", None),
                             ]
                         ),
                     ],

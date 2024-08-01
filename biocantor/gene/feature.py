@@ -100,6 +100,27 @@ class FeatureInterval(AbstractFeatureInterval):
     def __repr__(self):
         return "<{}>".format(str(self))
 
+    def __getstate__(self):
+        return self.to_dict(export_parent=True)
+
+    def __setstate__(self, state):
+        fi = self.from_dict(state)
+        self.__init__(
+            [x.start for x in fi.chromosome_location.blocks],
+            [x.end for x in fi.chromosome_location.blocks],
+            fi.strand,
+            fi.qualifiers,
+            fi.sequence_guid,
+            fi.sequence_name,
+            fi.feature_types,
+            fi.feature_name,
+            fi.feature_id,
+            fi.guid,
+            fi.feature_guid,
+            fi._is_primary_feature,
+            fi._parent_or_seq_chunk_parent,
+        )
+
     @property
     def id(self) -> str:
         """Returns the ID of this feature. Provides a shared API across genes/transcripts and features."""
@@ -154,13 +175,18 @@ class FeatureInterval(AbstractFeatureInterval):
         """Chunk relative CDS size (can shrink if the Location is a slice of the full transcript)"""
         raise NoncodingTranscriptError("No chunk-relative CDS size on a non-transcribed feature")
 
-    def to_dict(self, chromosome_relative_coordinates: bool = True) -> Dict[str, Any]:
+    def to_dict(self, chromosome_relative_coordinates: bool = True, export_parent: bool = False) -> Dict[str, Any]:
         """Convert to a dict usable by :class:`biocantor.io.models.FeatureIntervalModel`."""
         if chromosome_relative_coordinates:
             interval_starts = self._genomic_starts
             interval_ends = self._genomic_ends
         else:
             interval_starts, interval_ends = list(zip(*((x.start, x.end) for x in self.relative_blocks)))
+
+        if export_parent is True:
+            parent_or_seq_chunk_parent = self._parent_to_dict(chromosome_relative_coordinates)
+        else:
+            parent_or_seq_chunk_parent = None
 
         return dict(
             interval_starts=interval_starts,
@@ -175,11 +201,15 @@ class FeatureInterval(AbstractFeatureInterval):
             feature_interval_guid=self.guid,
             feature_guid=self.feature_guid,
             is_primary_feature=self._is_primary_feature,
+            parent_or_seq_chunk_parent=parent_or_seq_chunk_parent,
         )
 
     @staticmethod
     def from_dict(vals: Dict[str, Any], parent_or_seq_chunk_parent: Optional[Parent] = None) -> "FeatureInterval":
         """Build a :class:`FeatureInterval` from a dictionary."""
+        if not parent_or_seq_chunk_parent and "parent_or_seq_chunk_parent" in vals:
+            parent_or_seq_chunk_parent = FeatureInterval.convert_parent_dict_to_parent(vals)
+
         return FeatureInterval(
             interval_starts=vals["interval_starts"],
             interval_ends=vals["interval_ends"],
@@ -612,6 +642,24 @@ class FeatureIntervalCollection(AbstractFeatureIntervalCollection):
             f"Intervals:{','.join(str(f) for f in self.feature_intervals)})"
         )
 
+    def __getstate__(self):
+        return self.to_dict(export_parent=True)
+
+    def __setstate__(self, state):
+        fc = self.from_dict(state)
+        self.__init__(
+            fc.feature_intervals,
+            fc.feature_collection_name,
+            fc.feature_collection_id,
+            fc.feature_collection_type,
+            fc.locus_tag,
+            fc.sequence_name,
+            fc.sequence_guid,
+            fc.guid,
+            fc.qualifiers,
+            fc._parent_or_seq_chunk_parent,
+        )
+
     def iter_children(self) -> Iterable[FeatureInterval]:
         """Iterate over all intervals in this collection."""
         yield from self.feature_intervals
@@ -669,8 +717,13 @@ class FeatureIntervalCollection(AbstractFeatureIntervalCollection):
             parent_or_seq_chunk_parent=self.chunk_relative_location.parent,
         )
 
-    def to_dict(self, chromosome_relative_coordinates: bool = True) -> Dict[str, Any]:
+    def to_dict(self, chromosome_relative_coordinates: bool = True, export_parent: bool = False) -> Dict[str, Any]:
         """Convert to a dict usable by :class:`~biocantor.io.models.FeatureIntervalCollectionModel`."""
+        if export_parent is True:
+            parent_or_seq_chunk_parent = self._parent_to_dict(chromosome_relative_coordinates)
+        else:
+            parent_or_seq_chunk_parent = None
+
         return dict(
             feature_intervals=[feat.to_dict(chromosome_relative_coordinates) for feat in self.feature_intervals],
             feature_collection_name=self.feature_collection_name,
@@ -681,6 +734,7 @@ class FeatureIntervalCollection(AbstractFeatureIntervalCollection):
             sequence_name=self.sequence_name,
             sequence_guid=self.sequence_guid,
             feature_collection_guid=self.guid,
+            parent_or_seq_chunk_parent=parent_or_seq_chunk_parent,
         )
 
     @staticmethod
@@ -688,6 +742,9 @@ class FeatureIntervalCollection(AbstractFeatureIntervalCollection):
         vals: Dict[str, Any], parent_or_seq_chunk_parent: Optional[Parent] = None
     ) -> "FeatureIntervalCollection":
         """Build a :class:`FeatureIntervalCollection` from a dictionary representation"""
+        if not parent_or_seq_chunk_parent and "parent_or_seq_chunk_parent" in vals:
+            parent_or_seq_chunk_parent = FeatureIntervalCollection.convert_parent_dict_to_parent(vals)
+
         return FeatureIntervalCollection(
             feature_intervals=[
                 FeatureInterval.from_dict(x, parent_or_seq_chunk_parent) for x in vals["feature_intervals"]

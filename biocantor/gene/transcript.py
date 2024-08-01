@@ -162,13 +162,39 @@ class TranscriptInterval(AbstractFeatureInterval):
     def __repr__(self):
         return "<{}>".format(str(self))
 
+    def __getstate__(self):
+        return self.to_dict(export_parent=True)
+
+    def __setstate__(self, state):
+        tx = self.from_dict(state)
+        self.__init__(
+            [x.start for x in tx.chromosome_location.blocks],
+            [x.end for x in tx.chromosome_location.blocks],
+            tx.strand,
+            [x.start for x in tx.cds.chromosome_location.blocks] if tx.cds else None,
+            [x.end for x in tx.cds.chromosome_location.blocks] if tx.cds else None,
+            tx.cds.frames if tx.cds else None,
+            tx.qualifiers,
+            tx._is_primary_feature,
+            tx.transcript_id,
+            tx.transcript_symbol,
+            tx.transcript_type,
+            tx.sequence_guid,
+            tx.sequence_name,
+            tx.protein_id,
+            tx.product,
+            tx.guid,
+            tx.transcript_guid,
+            tx._parent_or_seq_chunk_parent,
+        )
+
+    def __len__(self):
+        return sum((end - start) for end, start in zip(self._genomic_ends, self._genomic_starts))
+
     @property
     def is_primary_tx(self) -> bool:
         """Is this the primary transcript?"""
         return self.is_primary_feature
-
-    def __len__(self):
-        return sum((end - start) for end, start in zip(self._genomic_ends, self._genomic_starts))
 
     @property
     def cds_location(self) -> Location:
@@ -307,7 +333,7 @@ class TranscriptInterval(AbstractFeatureInterval):
         if self.cds:
             self.cds._liftover_this_location_to_seq_chunk_parent(seq_chunk_parent)
 
-    def to_dict(self, chromosome_relative_coordinates: bool = True) -> Dict[str, Any]:
+    def to_dict(self, chromosome_relative_coordinates: bool = True, export_parent: bool = False) -> Dict[str, Any]:
         """Convert to a dict usable by :class:`biocantor.io.models.TranscriptIntervalModel`."""
         if chromosome_relative_coordinates:
             exon_starts = self._genomic_starts
@@ -326,6 +352,12 @@ class TranscriptInterval(AbstractFeatureInterval):
             cds_starts = None
             cds_ends = None
             cds_frames = None
+
+        if export_parent is True:
+            parent_or_seq_chunk_parent = self._parent_to_dict(chromosome_relative_coordinates)
+        else:
+            parent_or_seq_chunk_parent = None
+
         return dict(
             exon_starts=exon_starts,
             exon_ends=exon_ends,
@@ -344,11 +376,15 @@ class TranscriptInterval(AbstractFeatureInterval):
             product=self.product,
             transcript_guid=self.transcript_guid,
             transcript_interval_guid=self.guid,
+            parent_or_seq_chunk_parent=parent_or_seq_chunk_parent,
         )
 
     @staticmethod
     def from_dict(vals: Dict[str, Any], parent_or_seq_chunk_parent: Optional[Parent] = None) -> "TranscriptInterval":
         """Build a :class:`TranscriptInterval` from a dictionary."""
+
+        if not parent_or_seq_chunk_parent and "parent_or_seq_chunk_parent" in vals:
+            parent_or_seq_chunk_parent = TranscriptInterval.convert_parent_dict_to_parent(vals)
 
         return TranscriptInterval(
             exon_starts=vals["exon_starts"],
