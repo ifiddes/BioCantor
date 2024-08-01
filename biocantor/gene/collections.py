@@ -31,7 +31,6 @@ from biocantor.gene.variants import VariantIntervalCollection, VariantInterval
 from biocantor.io.gff3.rows import GFFRow, GTFRow
 from biocantor.location import SingleInterval, EmptyLocation, Strand
 from biocantor.parent import Parent, SequenceType
-from biocantor.sequence import Alphabet
 from biocantor.util.bins import bins
 from biocantor.util.hashing import digest_object
 
