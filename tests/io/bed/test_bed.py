@@ -145,6 +145,7 @@ class TestBedWriter:
                                                     ("sequence_guid", None),
                                                     ("transcript_interval_guid", None),
                                                     ("transcript_guid", None),
+                                                    ("parent_or_seq_chunk_parent", None),
                                                 ]
                                             )
                                         ],
@@ -157,6 +158,7 @@ class TestBedWriter:
                                     ("sequence_name", "chr1"),
                                     ("sequence_guid", None),
                                     ("gene_guid", None),
+                                    ("parent_or_seq_chunk_parent", None),
                                 ]
                             )
                         ],
@@ -204,6 +206,7 @@ class TestBedWriter:
                                                     ("sequence_guid", None),
                                                     ("transcript_interval_guid", None),
                                                     ("transcript_guid", None),
+                                                    ("parent_or_seq_chunk_parent", None),
                                                 ]
                                             )
                                         ],
@@ -216,6 +219,7 @@ class TestBedWriter:
                                     ("sequence_name", "None"),
                                     ("sequence_guid", None),
                                     ("gene_guid", None),
+                                    ("parent_or_seq_chunk_parent", None),
                                 ]
                             )
                         ],
