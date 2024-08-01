@@ -107,6 +107,24 @@ class GeneInterval(AbstractFeatureIntervalCollection):
             f"Intervals:{','.join(str(f) for f in self.transcripts)})"
         )
 
+    def __getstate__(self):
+        return self.to_dict(export_parent=True)
+
+    def __setstate__(self, state):
+        gene = self.from_dict(state)
+        self.__init__(
+            gene.transcripts,
+            gene.guid,
+            gene.gene_id,
+            gene.gene_symbol,
+            gene.gene_type,
+            gene.locus_tag,
+            gene.qualifiers,
+            gene.sequence_name,
+            gene.sequence_guid,
+            gene._parent_or_seq_chunk_parent,
+        )
+
     def iter_children(self) -> Iterable[TranscriptInterval]:
         yield from self.transcripts
 
@@ -129,8 +147,14 @@ class GeneInterval(AbstractFeatureIntervalCollection):
     def children_guids(self):
         return {x.guid for x in self.transcripts}
 
-    def to_dict(self, chromosome_relative_coordinates: bool = True) -> Dict[str, Any]:
+    def to_dict(self, chromosome_relative_coordinates: bool = True, export_parent: bool = False) -> Dict[str, Any]:
         """Convert to a dict usable by :class:`~biocantor.io.models.GeneIntervalModel`."""
+
+        if export_parent is True:
+            parent_or_seq_chunk_parent = self._parent_to_dict(chromosome_relative_coordinates)
+        else:
+            parent_or_seq_chunk_parent = None
+
         return dict(
             transcripts=[tx.to_dict(chromosome_relative_coordinates) for tx in self.transcripts],
             gene_id=self.gene_id,
@@ -141,11 +165,15 @@ class GeneInterval(AbstractFeatureIntervalCollection):
             sequence_name=self.sequence_name,
             sequence_guid=self.sequence_guid,
             gene_guid=self.guid,
+            parent_or_seq_chunk_parent=parent_or_seq_chunk_parent,
         )
 
     @staticmethod
     def from_dict(vals: Dict[str, Any], parent_or_seq_chunk_parent: Optional[Parent] = None) -> "GeneInterval":
         """Build a :class:`GeneInterval` from a dictionary representation"""
+        if not parent_or_seq_chunk_parent and "parent_or_seq_chunk_parent" in vals:
+            parent_or_seq_chunk_parent = GeneInterval.convert_parent_dict_to_parent(vals)
+
         return GeneInterval(
             transcripts=[TranscriptInterval.from_dict(x, parent_or_seq_chunk_parent) for x in vals["transcripts"]],
             gene_id=vals["gene_id"],

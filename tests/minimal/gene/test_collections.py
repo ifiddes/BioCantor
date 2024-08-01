@@ -189,6 +189,14 @@ class TestGene:
 
     gene_noncoding = GeneIntervalModel.Schema().load(dict(transcripts=[tx_noncoding, tx_noncoding_short]))
 
+    @pytest.mark.parametrize("parent", [parent_genome, parent_genome_10_49, parent_genome_rev_5_44])
+    def test_pickling(self, parent):
+        obj = self.gene.to_gene_interval(parent)
+        obj_str = pickle.dumps(obj)
+        new_obj = pickle.loads(obj_str)
+        assert obj.to_dict() == new_obj.to_dict()
+        assert obj.get_reference_sequence() == new_obj.get_reference_sequence()
+
     def test_primary_inference(self):
         obj = self.gene.to_gene_interval()
         assert obj.primary_transcript == TranscriptIntervalModel.Schema().load(self.tx2).to_transcript_interval()
@@ -360,6 +368,14 @@ class TestFeatureIntervalCollection:
         obj2 = self.collection1.to_feature_collection(parent_genome_rev_5_44)
         assert obj1 != obj2
         assert hash(obj1) != hash(obj2)
+
+    @pytest.mark.parametrize("parent", [parent_genome, parent_genome_10_49, parent_genome_rev_5_44])
+    def test_pickling(self, parent):
+        obj = self.collection1.to_feature_collection(parent)
+        obj_str = pickle.dumps(obj)
+        new_obj = pickle.loads(obj_str)
+        assert obj.to_dict() == new_obj.to_dict()
+        assert obj.get_reference_sequence() == new_obj.get_reference_sequence()
 
 
 class TestAnnotationCollection:
@@ -1122,6 +1138,7 @@ class TestAnnotationCollection:
                         "product": None,
                         "transcript_guid": None,
                         "transcript_interval_guid": UUID("043d7309-9036-7b27-d841-b7d6a2f70712"),
+                        "parent_or_seq_chunk_parent": None,
                     },
                     {
                         "exon_starts": [12, 17, 22],
@@ -1141,6 +1158,7 @@ class TestAnnotationCollection:
                         "product": None,
                         "transcript_guid": None,
                         "transcript_interval_guid": UUID("2370657b-19cf-625f-566f-e1486d5dd163"),
+                        "parent_or_seq_chunk_parent": None,
                     },
                 ],
                 "gene_id": "gene1",
@@ -1151,6 +1169,7 @@ class TestAnnotationCollection:
                 "sequence_name": None,
                 "sequence_guid": None,
                 "gene_guid": UUID("af85efdb-05fd-fbab-62c4-27e8d0c874e3"),
+                "parent_or_seq_chunk_parent": None,
             },
             UUID("2370657b-19cf-625f-566f-e1486d5dd163"): {
                 "transcripts": [
@@ -1172,6 +1191,7 @@ class TestAnnotationCollection:
                         "product": None,
                         "transcript_guid": None,
                         "transcript_interval_guid": UUID("043d7309-9036-7b27-d841-b7d6a2f70712"),
+                        "parent_or_seq_chunk_parent": None,
                     },
                     {
                         "exon_starts": [12, 17, 22],
@@ -1191,6 +1211,7 @@ class TestAnnotationCollection:
                         "product": None,
                         "transcript_guid": None,
                         "transcript_interval_guid": UUID("2370657b-19cf-625f-566f-e1486d5dd163"),
+                        "parent_or_seq_chunk_parent": None,
                     },
                 ],
                 "gene_id": "gene1",
@@ -1201,6 +1222,7 @@ class TestAnnotationCollection:
                 "sequence_name": None,
                 "sequence_guid": None,
                 "gene_guid": UUID("af85efdb-05fd-fbab-62c4-27e8d0c874e3"),
+                "parent_or_seq_chunk_parent": None,
             },
             UUID("848cf6c7-6867-c46b-d60f-f5e248febba4"): {
                 "feature_intervals": [
@@ -1217,6 +1239,7 @@ class TestAnnotationCollection:
                         "feature_interval_guid": UUID("848cf6c7-6867-c46b-d60f-f5e248febba4"),
                         "feature_guid": None,
                         "is_primary_feature": None,
+                        "parent_or_seq_chunk_parent": None,
                     },
                     {
                         "interval_starts": [12, 17, 22],
@@ -1231,6 +1254,7 @@ class TestAnnotationCollection:
                         "feature_interval_guid": UUID("1e03f51a-5f3f-601c-1a27-2835c346d2bc"),
                         "feature_guid": None,
                         "is_primary_feature": None,
+                        "parent_or_seq_chunk_parent": None,
                     },
                 ],
                 "feature_collection_name": None,
@@ -1241,6 +1265,7 @@ class TestAnnotationCollection:
                 "sequence_name": None,
                 "sequence_guid": None,
                 "feature_collection_guid": UUID("94e30bde-d622-3b98-1745-ab022b6ae6ab"),
+                "parent_or_seq_chunk_parent": None,
             },
             UUID("1e03f51a-5f3f-601c-1a27-2835c346d2bc"): {
                 "feature_intervals": [
@@ -1257,6 +1282,7 @@ class TestAnnotationCollection:
                         "feature_interval_guid": UUID("848cf6c7-6867-c46b-d60f-f5e248febba4"),
                         "feature_guid": None,
                         "is_primary_feature": None,
+                        "parent_or_seq_chunk_parent": None,
                     },
                     {
                         "interval_starts": [12, 17, 22],
@@ -1271,6 +1297,7 @@ class TestAnnotationCollection:
                         "feature_interval_guid": UUID("1e03f51a-5f3f-601c-1a27-2835c346d2bc"),
                         "feature_guid": None,
                         "is_primary_feature": None,
+                        "parent_or_seq_chunk_parent": None,
                     },
                 ],
                 "feature_collection_name": None,
@@ -1281,6 +1308,7 @@ class TestAnnotationCollection:
                 "sequence_name": None,
                 "sequence_guid": None,
                 "feature_collection_guid": UUID("94e30bde-d622-3b98-1745-ab022b6ae6ab"),
+                "parent_or_seq_chunk_parent": None,
             },
             UUID("079c8c04-e2bd-590b-87f7-cb792ba67064"): {
                 "feature_intervals": [
@@ -1297,6 +1325,7 @@ class TestAnnotationCollection:
                         "feature_interval_guid": UUID("079c8c04-e2bd-590b-87f7-cb792ba67064"),
                         "feature_guid": None,
                         "is_primary_feature": None,
+                        "parent_or_seq_chunk_parent": None,
                     }
                 ],
                 "feature_collection_name": None,
@@ -1307,6 +1336,7 @@ class TestAnnotationCollection:
                 "sequence_name": None,
                 "sequence_guid": None,
                 "feature_collection_guid": UUID("639c6178-5f15-935b-5085-dee5ed6badd5"),
+                "parent_or_seq_chunk_parent": None,
             },
         }
 

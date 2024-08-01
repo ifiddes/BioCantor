@@ -1,4 +1,5 @@
 from uuid import UUID
+import pickle
 
 import pytest
 
@@ -491,6 +492,14 @@ class TestFeatureInterval:
     def test_chromosome_gaps_location(self, feature, parent, expected_gaps):
         feat = feature.to_feature_interval(parent)
         assert feat.chromosome_gaps_location == expected_gaps
+
+    @pytest.mark.parametrize("parent", [parent_genome2_1_15])
+    def test_pickling(self, parent):
+        obj = e3_spliced.to_feature_interval(parent)
+        obj_str = pickle.dumps(obj)
+        new_obj = pickle.loads(obj_str)
+        assert obj.to_dict() == new_obj.to_dict()
+        assert obj.get_reference_sequence() == new_obj.get_reference_sequence()
 
 
 class TestFeatureIntervalSequenceSubset:
