@@ -1,4 +1,5 @@
 import json
+import pickle
 from collections import OrderedDict
 
 import pytest
@@ -111,6 +112,16 @@ class TestEukaryoticGenbankParser:
             "GI526_G0000004",
             "GI526_G0000005",
         }
+
+    def test_pickle(self, test_data_dir):
+        gbk = test_data_dir / self.gbk
+        with open(gbk, "r") as fh:
+            with pytest.warns(GenBankEmptyGeneWarning):
+                parsed = list(parse_genbank(fh))[0]
+        parsed = parsed.to_annotation_collection()
+        obj_str = pickle.dumps(parsed)
+        new_obj = pickle.loads(obj_str)
+        assert new_obj.to_dict() == parsed.to_dict()
 
 
 class TestSplicedGenbankParser:
