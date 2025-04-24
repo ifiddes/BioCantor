@@ -409,7 +409,7 @@ class AnnotationCollectionModel(BaseModel):
     completely_within: Optional[bool] = None
     parent_or_seq_chunk_parent: Optional[ParentModel] = None
 
-    @post_dump(pass_original=True, pass_many=False)
+    @post_dump(pass_original=True, pass_collection=False)
     def post_dump(self, data, model, many=False):
         """
         If the object being dumped is an AnnotationCollection, convert the ``_parent_or_seq_chunk_parent``
@@ -425,7 +425,14 @@ class AnnotationCollectionModel(BaseModel):
         if not parent_or_seq_chunk_parent and self.parent_or_seq_chunk_parent:
             parent_or_seq_chunk_parent = self.parent_or_seq_chunk_parent.to_parent()
 
-        genes = [gene.to_gene_interval(parent_or_seq_chunk_parent) for gene in self.genes]
+        genes = []
+        for gene in self.genes:
+            try:
+                parsed_gene = gene.to_gene_interval(parent_or_seq_chunk_parent)
+            except:
+                print(gene)
+            else:
+                genes.append(parsed_gene)
         feature_collections = [
             feat.to_feature_collection(parent_or_seq_chunk_parent) for feat in self.feature_collections
         ]

@@ -557,8 +557,6 @@ class AbstractInterval(ABC):
             if not isinstance(qualifiers, dict):
                 raise ValidationException("Qualifiers must be a dictionary")
             for key, vals in qualifiers.items():
-                if not isinstance(vals, list):
-                    raise ValidationException("Qualifier values must be lists")
                 self.qualifiers[key] = {str(x) for x in vals}
 
     def _export_qualifiers_to_list(self) -> Optional[Dict[Hashable, List[str]]]:
