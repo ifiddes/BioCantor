@@ -77,7 +77,7 @@ def convert_vcf_records_to_model(recs: List[vcf.model._Record]) -> Dict[str, Lis
 
 
 def parse_vcf_file(
-    variant_handle_or_path: Optional[Union[TextIO, str, pathlib.Path]] = None
+    variant_handle_or_path: Optional[Union[TextIO, str, pathlib.Path]] = None,
 ) -> Dict[str, List[VariantIntervalCollectionModel]]:
     """
     Wrapper for :meth:`convert_vcf_records_to_model()` that handles file opening. Primary VCF parsing function.

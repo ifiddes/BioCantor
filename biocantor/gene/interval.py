@@ -978,7 +978,7 @@ class AbstractFeatureIntervalCollection(AbstractInterval, ABC):
 
     @staticmethod
     def _find_primary_feature(
-        intervals: Union[List["TranscriptInterval"], List["FeatureInterval"]]
+        intervals: Union[List["TranscriptInterval"], List["FeatureInterval"]],
     ) -> Optional[Union["TranscriptInterval", "FeatureInterval"]]:
         """
         Used in object construction to find the primary feature. Shared between :class:`GeneInterval`
