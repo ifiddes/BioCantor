@@ -1094,7 +1094,7 @@ class CDSInterval(AbstractFeatureInterval):
         if new_loc.is_empty:
             raise EmptyLocationException("Variant incorporation led to an EmptyLocation")
         fn = CDSInterval.from_chunk_relative_location if self.is_chunk_relative else CDSInterval.from_location
-        new_frames = CDSInterval.construct_frames_from_location(new_loc, self.frames[0])
+        new_frames = CDSInterval.construct_frames_from_location(new_loc, next(self._frame_iter()))
         return fn(
             new_loc,
             cds_frames=new_frames,
