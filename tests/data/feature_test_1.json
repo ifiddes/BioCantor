@@ -21,7 +21,8 @@
                     ],
                     "feature_name": null,
                     "feature_id": "id-GeneID:116309122",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": null,
@@ -50,7 +51,8 @@
                 "regulatory_class": [
                     "transcriptional_cis_regulatory_region"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         },
         {
             "feature_intervals": [
@@ -73,7 +75,8 @@
                     ],
                     "feature_name": "CRISPRi-validated cis-regulatory element chr21.70",
                     "feature_id": "id-GeneID:116309122-2",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": "CRISPRi-validated cis-regulatory element chr21.70",
@@ -93,7 +96,8 @@
                 "standard_name": [
                     "CRISPRi-validated cis-regulatory element chr21.70"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         },
         {
             "feature_intervals": [
@@ -116,7 +120,8 @@
                     ],
                     "feature_name": "meiotic recombination hotspot B",
                     "feature_id": "id-GeneID:107403153",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": "meiotic recombination hotspot B",
@@ -136,7 +141,8 @@
                 "standard_name": [
                     "meiotic recombination hotspot B"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         },
         {
             "feature_intervals": [
@@ -160,7 +166,8 @@
                     ],
                     "feature_name": null,
                     "feature_id": "id-GeneID:107403153-2",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": null,
@@ -186,7 +193,8 @@
                 "recombination_class": [
                     "meiotic"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         },
         {
             "feature_intervals": [
@@ -210,7 +218,8 @@
                     ],
                     "feature_name": null,
                     "feature_id": "id-GeneID:107403153-3",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": null,
@@ -236,7 +245,8 @@
                 "recombination_class": [
                     "meiotic"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         },
         {
             "feature_intervals": [
@@ -260,7 +270,8 @@
                     ],
                     "feature_name": null,
                     "feature_id": "id-GeneID:107403153-4",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": null,
@@ -286,7 +297,8 @@
                 "recombination_class": [
                     "meiotic"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         },
         {
             "feature_intervals": [
@@ -310,7 +322,8 @@
                     ],
                     "feature_name": null,
                     "feature_id": "id-GeneID:107403153-5",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": null,
@@ -336,7 +349,8 @@
                 "recombination_class": [
                     "meiotic"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         },
         {
             "feature_intervals": [
@@ -359,7 +373,8 @@
                     ],
                     "feature_name": null,
                     "feature_id": "id-GeneID:107403153-6",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": null,
@@ -382,10 +397,151 @@
                 "gbkey": [
                     "misc_feature"
                 ]
-            }
+            },
+            "parent_or_seq_chunk_parent": null
         }
     ],
     "genes": [
+        {
+            "transcripts": [
+                {
+                    "exon_starts": [
+                        14816837,
+                        14825522,
+                        14857541,
+                        14918170
+                    ],
+                    "exon_ends": [
+                        14824415,
+                        14825624,
+                        14857708,
+                        14918668
+                    ],
+                    "strand": "MINUS",
+                    "cds_starts": null,
+                    "cds_ends": null,
+                    "cds_frames": null,
+                    "qualifiers": {
+                        "Dbxref": [
+                            "Genbank:NR_146322.1",
+                            "GeneID:107987295",
+                            "HGNC:HGNC:53135"
+                        ],
+                        "gbkey": [
+                            "ncRNA"
+                        ],
+                        "gene": [
+                            "LINC02246"
+                        ]
+                    },
+                    "is_primary_tx": false,
+                    "transcript_id": "NR_146322.1",
+                    "protein_id": null,
+                    "product": null,
+                    "transcript_symbol": null,
+                    "transcript_type": "lncRNA",
+                    "sequence_name": "NC_000021.9",
+                    "sequence_guid": null,
+                    "transcript_interval_guid": null,
+                    "transcript_guid": null,
+                    "parent_or_seq_chunk_parent": null
+                }
+            ],
+            "gene_id": "gene-LINC02246",
+            "gene_symbol": "LINC02246",
+            "gene_type": "lncRNA",
+            "locus_tag": null,
+            "qualifiers": {
+                "Dbxref": [
+                    "GeneID:107987295",
+                    "HGNC:HGNC:53135"
+                ],
+                "description": [
+                    "long intergenic non-protein coding RNA 2246"
+                ],
+                "gbkey": [
+                    "Gene"
+                ],
+                "gene": [
+                    "LINC02246"
+                ]
+            },
+            "sequence_name": "NC_000021.9",
+            "sequence_guid": null,
+            "gene_guid": null,
+            "parent_or_seq_chunk_parent": null
+        },
+        {
+            "transcripts": [
+                {
+                    "exon_starts": [
+                        14816837
+                    ],
+                    "exon_ends": [
+                        14918668
+                    ],
+                    "strand": "MINUS",
+                    "cds_starts": null,
+                    "cds_ends": null,
+                    "cds_frames": null,
+                    "qualifiers": {
+                        "Dbxref": [
+                            "GeneID:107987295",
+                            "HGNC:HGNC:53135"
+                        ],
+                        "description": [
+                            "long intergenic non-protein coding RNA 2246"
+                        ],
+                        "gbkey": [
+                            "Gene"
+                        ],
+                        "gene": [
+                            "LINC02246"
+                        ],
+                        "provided_biotype": [
+                            "invalid"
+                        ]
+                    },
+                    "is_primary_tx": false,
+                    "transcript_id": "gene-LINC02246",
+                    "protein_id": null,
+                    "product": null,
+                    "transcript_symbol": "LINC02246",
+                    "transcript_type": null,
+                    "sequence_name": "NC_000021.9",
+                    "sequence_guid": null,
+                    "transcript_interval_guid": null,
+                    "transcript_guid": null,
+                    "parent_or_seq_chunk_parent": null
+                }
+            ],
+            "gene_id": "gene-LINC02246",
+            "gene_symbol": "LINC02246",
+            "gene_type": null,
+            "locus_tag": null,
+            "qualifiers": {
+                "Dbxref": [
+                    "GeneID:107987295",
+                    "HGNC:HGNC:53135"
+                ],
+                "description": [
+                    "long intergenic non-protein coding RNA 2246"
+                ],
+                "gbkey": [
+                    "Gene"
+                ],
+                "gene": [
+                    "LINC02246"
+                ],
+                "provided_biotype": [
+                    "invalid"
+                ]
+            },
+            "sequence_name": "NC_000021.9",
+            "sequence_guid": null,
+            "gene_guid": null,
+            "parent_or_seq_chunk_parent": null
+        },
         {
             "transcripts": [
                 {
@@ -429,7 +585,8 @@
                     "sequence_name": "NC_000021.9",
                     "sequence_guid": null,
                     "transcript_interval_guid": null,
-                    "transcript_guid": null
+                    "transcript_guid": null,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "gene_id": "gene-POLR2CP1",
@@ -459,7 +616,8 @@
             },
             "sequence_name": "NC_000021.9",
             "sequence_guid": null,
-            "gene_guid": null
+            "gene_guid": null,
+            "parent_or_seq_chunk_parent": null
         },
         {
             "transcripts": [
@@ -504,7 +662,8 @@
                     "sequence_name": "NC_000021.9",
                     "sequence_guid": null,
                     "transcript_interval_guid": null,
-                    "transcript_guid": null
+                    "transcript_guid": null,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "gene_id": "gene-GAPDHP16",
@@ -534,145 +693,11 @@
             },
             "sequence_name": "NC_000021.9",
             "sequence_guid": null,
-            "gene_guid": null
-        },
-        {
-            "transcripts": [
-                {
-                    "exon_starts": [
-                        14816837,
-                        14825522,
-                        14857541,
-                        14918170
-                    ],
-                    "exon_ends": [
-                        14824415,
-                        14825624,
-                        14857708,
-                        14918668
-                    ],
-                    "strand": "MINUS",
-                    "cds_starts": null,
-                    "cds_ends": null,
-                    "cds_frames": null,
-                    "qualifiers": {
-                        "Dbxref": [
-                            "Genbank:NR_146322.1",
-                            "GeneID:107987295",
-                            "HGNC:HGNC:53135"
-                        ],
-                        "gbkey": [
-                            "ncRNA"
-                        ],
-                        "gene": [
-                            "LINC02246"
-                        ]
-                    },
-                    "is_primary_tx": false,
-                    "transcript_id": "NR_146322.1",
-                    "protein_id": null,
-                    "product": null,
-                    "transcript_symbol": null,
-                    "transcript_type": "lncRNA",
-                    "sequence_name": "NC_000021.9",
-                    "sequence_guid": null,
-                    "transcript_interval_guid": null,
-                    "transcript_guid": null
-                }
-            ],
-            "gene_id": "gene-LINC02246",
-            "gene_symbol": "LINC02246",
-            "gene_type": "lncRNA",
-            "locus_tag": null,
-            "qualifiers": {
-                "Dbxref": [
-                    "GeneID:107987295",
-                    "HGNC:HGNC:53135"
-                ],
-                "description": [
-                    "long intergenic non-protein coding RNA 2246"
-                ],
-                "gbkey": [
-                    "Gene"
-                ],
-                "gene": [
-                    "LINC02246"
-                ]
-            },
-            "sequence_name": "NC_000021.9",
-            "sequence_guid": null,
-            "gene_guid": null
-        },
-        {
-            "transcripts": [
-                {
-                    "exon_starts": [
-                        14816837
-                    ],
-                    "exon_ends": [
-                        14918668
-                    ],
-                    "strand": "MINUS",
-                    "cds_starts": null,
-                    "cds_ends": null,
-                    "cds_frames": null,
-                    "qualifiers": {
-                        "Dbxref": [
-                            "GeneID:107987295",
-                            "HGNC:HGNC:53135"
-                        ],
-                        "description": [
-                            "long intergenic non-protein coding RNA 2246"
-                        ],
-                        "gbkey": [
-                            "Gene"
-                        ],
-                        "gene": [
-                            "LINC02246"
-                        ],
-                        "provided_biotype": [
-                            "invalid"
-                        ]
-                    },
-                    "is_primary_tx": false,
-                    "transcript_id": "gene-LINC02246",
-                    "protein_id": null,
-                    "product": null,
-                    "transcript_symbol": "LINC02246",
-                    "transcript_type": null,
-                    "sequence_name": "NC_000021.9",
-                    "sequence_guid": null,
-                    "transcript_interval_guid": null,
-                    "transcript_guid": null
-                }
-            ],
-            "gene_id": "gene-LINC02246",
-            "gene_symbol": "LINC02246",
-            "gene_type": null,
-            "locus_tag": null,
-            "qualifiers": {
-                "Dbxref": [
-                    "GeneID:107987295",
-                    "HGNC:HGNC:53135"
-                ],
-                "description": [
-                    "long intergenic non-protein coding RNA 2246"
-                ],
-                "gbkey": [
-                    "Gene"
-                ],
-                "gene": [
-                    "LINC02246"
-                ],
-                "provided_biotype": [
-                    "invalid"
-                ]
-            },
-            "sequence_name": "NC_000021.9",
-            "sequence_guid": null,
-            "gene_guid": null
+            "gene_guid": null,
+            "parent_or_seq_chunk_parent": null
         }
     ],
+    "variant_collections": [],
     "name": null,
     "id": null,
     "sequence_name": "NC_000021.9",

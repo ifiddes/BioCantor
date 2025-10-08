@@ -25,7 +25,8 @@
                     ],
                     "feature_name": "feat2",
                     "feature_id": "2b4a5f34-aa89-c36b-ccc1-87cab22213b0",
-                    "is_primary_feature": false
+                    "is_primary_feature": false,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "feature_collection_name": "featgrp1",
@@ -35,7 +36,8 @@
             "sequence_name": "chr1",
             "sequence_guid": null,
             "feature_collection_guid": null,
-            "qualifiers": null
+            "qualifiers": null,
+            "parent_or_seq_chunk_parent": null
         }
     ],
     "genes": [
@@ -78,7 +80,8 @@
                     "sequence_name": "chr1",
                     "sequence_guid": null,
                     "transcript_interval_guid": null,
-                    "transcript_guid": null
+                    "transcript_guid": null,
+                    "parent_or_seq_chunk_parent": null
                 },
                 {
                     "exon_starts": [
@@ -107,7 +110,8 @@
                     "sequence_name": "chr1",
                     "sequence_guid": null,
                     "transcript_interval_guid": null,
-                    "transcript_guid": null
+                    "transcript_guid": null,
+                    "parent_or_seq_chunk_parent": null
                 }
             ],
             "gene_id": "gene1",
@@ -117,9 +121,11 @@
             "qualifiers": null,
             "sequence_name": "chr1",
             "sequence_guid": null,
-            "gene_guid": null
+            "gene_guid": null,
+            "parent_or_seq_chunk_parent": null
         }
     ],
+    "variant_collections": [],
     "name": null,
     "id": null,
     "sequence_name": "chr1",
