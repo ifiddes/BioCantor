@@ -430,7 +430,7 @@ class AnnotationCollectionModel(BaseModel):
             try:
                 parsed_gene = gene.to_gene_interval(parent_or_seq_chunk_parent)
             except:
-                print(gene)
+                raise InvalidInputError(f"Could not parse gene: {gene}")
             else:
                 genes.append(parsed_gene)
         feature_collections = [
