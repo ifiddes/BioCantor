@@ -1,4 +1,4 @@
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 from abc import ABC, abstractmethod
 from enum import Enum
