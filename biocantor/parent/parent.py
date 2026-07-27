@@ -19,10 +19,6 @@ from biocantor.util.object_validation import ObjectValidation
 Parent = TypeVar("Parent")
 ParentInputType = TypeVar("ParentInputType")
 
-# 1000 seems reasonable for Parent caches
-# When parsing annotation files, the number of Parent objects built will likely be the # of chromosomes in the genome
-# When sequence chunks are used, the number of Parents will equal the number of distinct chunks built
-# In testing, a cache size of 1000 was more performant than 5000
 PARENT_CACHE_SIZE = 1000
 
 
@@ -39,7 +35,6 @@ def _unique_value_or_none(values: Iterable[Optional[str]]) -> Optional[str]:
         raise ParentException(f"Multiple distinct non-null values were provided: {values}")
 
 
-@lru_cache(maxsize=PARENT_CACHE_SIZE)
 class Parent(AbstractParent):
     """
     Holds information about a parent of some object. Typically the child object should hold
@@ -130,8 +125,7 @@ class Parent(AbstractParent):
 
         By default also checks that any associated Sequence objects also match, but this can be toggled off.
         """
-        # this checks the object under the lru_cache hood
-        if type(other) is not Parent.__wrapped__:
+        if type(other) is not Parent:
             return False
         if self.id != other.id:
             return False
