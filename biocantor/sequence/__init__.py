@@ -4,11 +4,11 @@ The :class:`Sequence` class defines a sequence with an :class:`Alphabet`. :class
 and can include child features.
 """
 
-from biocantor.parent import make_parent, Parent
+from biocantor.parent import _make_parent_dispatch, Parent
 from biocantor.sequence.alphabet import Alphabet  # noqa: F401
 from biocantor.sequence.sequence import Sequence
 
 
-@make_parent.register(Sequence)
+@_make_parent_dispatch.register(Sequence)
 def _(obj) -> Parent:
     return Parent(sequence=obj)

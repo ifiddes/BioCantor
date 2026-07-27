@@ -7,15 +7,15 @@ a :class:`Parent` object, situating it within a potentially arbitrary hierarchy 
 
 from biocantor.location.location import Location
 from biocantor.location.strand import Strand
-from biocantor.parent import make_parent, Parent
+from biocantor.parent import _make_parent_dispatch, Parent
 from biocantor.location.location_impl import SingleInterval, CompoundInterval, EmptyLocation  # noqa F401
 
 
-@make_parent.register(Location)
+@_make_parent_dispatch.register(Location)
 def _(obj) -> Parent:
     return Parent(location=obj)
 
 
-@make_parent.register(Strand)
+@_make_parent_dispatch.register(Strand)
 def _(obj) -> Parent:
     return Parent(strand=obj)

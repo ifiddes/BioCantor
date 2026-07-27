@@ -10,15 +10,21 @@ from biocantor.parent.parent import Parent, SequenceType  # noqa: F401
 
 
 @singledispatch
-def make_parent(obj) -> Parent:
+def _make_parent_dispatch(obj) -> Parent:
     raise TypeError("{} not supported".format(type(obj)))
 
 
-@make_parent.register(str)
+def make_parent(obj) -> Parent:
+    if type(obj) is Parent:
+        return obj
+    return _make_parent_dispatch(obj)
+
+
+@_make_parent_dispatch.register(str)
 def _(obj) -> Parent:
     return Parent(id=obj)
 
 
-@make_parent.register(Parent)
+@_make_parent_dispatch.register(Parent)
 def _(obj) -> Parent:
     return obj
