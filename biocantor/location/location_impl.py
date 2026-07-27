@@ -88,7 +88,7 @@ class SingleInterval(Location):
         if parent is None:
             obj.parent = None
         else:
-            obj.parent = parent.reset_location(cls._construct(start, end, strand, None))
+            obj.parent = parent._reset_location_fast(cls._construct(start, end, strand, None))
         return obj
 
     def __str__(self):
@@ -566,7 +566,9 @@ class CompoundInterval(Location):
         if parent is None:
             obj.parent = None
         else:
-            obj.parent = parent.reset_location(cls._construct(obj._starts, obj._ends, strand, None, presorted=True))
+            obj.parent = parent._reset_location_fast(
+                cls._construct(obj._starts, obj._ends, strand, None, presorted=True)
+            )
         return obj
 
     @property

@@ -115,7 +115,28 @@ class Parent(AbstractParent):
         self._strand_property = None
         self._stripped = None
 
+    @classmethod
+    def _construct(cls, *, id, sequence_type, strand, location, sequence, parent) -> "Parent":
+        """Fast path for internal callers (`_reset_location_fast`, `strip_location_info`) that
+        already know `id`/`sequence_type`/`sequence`/`parent` are unchanged from an already-valid
+        Parent, and that `location` (if not None) already satisfies strand-compatibility and
+        `end <= len(sequence)`. Skips `_unique_value_or_none` re-derivation and the
+        location/sequence cross-validation the public constructor performs. MUST NOT be called
+        from any public constructor path."""
+        obj = cls.__new__(cls)
+        obj.id = id
+        obj.sequence_type = sequence_type
+        obj._strand = strand
+        obj.location = location
+        obj.sequence = sequence
+        obj.parent = parent
+        obj._strand_property = None
+        obj._stripped = None
+        return obj
+
     def __eq__(self, other):
+        if self is other:
+            return True
         if not self.equals_except_location(other):
             return False
         return self.location == other.location and self.strand is other.strand
@@ -125,6 +146,8 @@ class Parent(AbstractParent):
 
         By default also checks that any associated Sequence objects also match, but this can be toggled off.
         """
+        if self is other:
+            return True
         if type(other) is not Parent:
             return False
         if self.id != other.id:
@@ -177,9 +200,11 @@ class Parent(AbstractParent):
             if self.location is None and self._strand is None:
                 self._stripped = self
             else:
-                self._stripped = Parent(
+                self._stripped = Parent._construct(
                     id=self.id,
                     sequence_type=self.sequence_type,
+                    strand=None,
+                    location=None,
                     sequence=self.sequence,
                     parent=self.parent,
                 )
@@ -247,6 +272,21 @@ class Parent(AbstractParent):
         """Returns a new Parent object with child location set to the given location"""
         strand = location.strand if location else None
         return Parent(
+            id=self.id,
+            sequence_type=self.sequence_type,
+            strand=strand,
+            location=location,
+            sequence=self.sequence,
+            parent=self.parent,
+        )
+
+    def _reset_location_fast(self, location) -> "Parent":
+        """Fast path for internal callers (`SingleInterval._construct`, `CompoundInterval._construct`)
+        that already hold a `location` provably satisfying the bounds `reset_location` re-validates
+        (e.g. because it's derived from bounds already checked against this same Parent's sequence).
+        MUST NOT be called from any public constructor path -- use `reset_location` there."""
+        strand = location.strand if location else None
+        return Parent._construct(
             id=self.id,
             sequence_type=self.sequence_type,
             strand=strand,
