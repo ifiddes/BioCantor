@@ -666,9 +666,11 @@ class AbstractFeatureInterval(AbstractInterval, ABC):
             SequenceType.CHROMOSOME
         ):
             parent = self._parent_or_seq_chunk_parent.first_ancestor_of_type(SequenceType.CHROMOSOME)
-            return CompoundInterval(self._genomic_starts, self._genomic_ends, self._strand, parent)
         else:
-            return CompoundInterval(self._genomic_starts, self._genomic_ends, self._strand)
+            parent = None
+        if len(self._genomic_starts) == 1:
+            return SingleInterval(self._genomic_starts[0], self._genomic_ends[0], self._strand, parent)
+        return CompoundInterval(self._genomic_starts, self._genomic_ends, self._strand, parent)
 
     @lru_cache(maxsize=1)
     @property
@@ -680,7 +682,10 @@ class AbstractFeatureInterval(AbstractInterval, ABC):
         by the chunk relative location of this Interval, if it exists.
         """
         if self.chunk_relative_location.is_empty:
-            loc = CompoundInterval(self._genomic_starts, self._genomic_ends, self._strand)
+            if len(self._genomic_starts) == 1:
+                loc = SingleInterval(self._genomic_starts[0], self._genomic_ends[0], self._strand)
+            else:
+                loc = CompoundInterval(self._genomic_starts, self._genomic_ends, self._strand)
             if self._parent_or_seq_chunk_parent.has_ancestor_of_type(SequenceType.CHROMOSOME):
                 parent = self._parent_or_seq_chunk_parent.first_ancestor_of_type(SequenceType.CHROMOSOME)
                 return loc.reset_parent(parent)

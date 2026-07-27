@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- `AbstractFeatureInterval.chromosome_location` and `_chunk_relative_bounded_chromosome_location`
+  now return a `SingleInterval` instead of a 1-block `CompoundInterval` for single-exon features
+  (all bacterial genes, many eukaryotic ones),
+  matching the collapse convention `initialize_location` already used
+  for the chunk-relative location of the same objects.
+  The genomic coordinates are unaffected,
+  but code that does `isinstance(x.chromosome_location, CompoundInterval)`
+  or a strict `==` comparison against a `CompoundInterval` will observe the type change.
+
 ## [1.3.1] 2025-10-09
 ### Fixed
 - Support for marshmallow 4

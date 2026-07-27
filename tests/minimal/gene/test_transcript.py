@@ -975,7 +975,7 @@ class TestTranscriptWithoutModel:
                         ),
                     ),
                 ),
-                CompoundInterval([222218], [222233], Strand.PLUS),
+                SingleInterval(222218, 222233, Strand.PLUS),
             )
         ],
     )
