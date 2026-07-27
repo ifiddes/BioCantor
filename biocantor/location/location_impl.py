@@ -73,6 +73,24 @@ class SingleInterval(Location):
                 )
             self.parent = parent_obj.reset_location(SingleInterval(start, end, strand))
 
+    @classmethod
+    def _construct(cls, start: int, end: int, strand: Strand, parent: Optional[Parent]) -> "SingleInterval":
+        """Fast path for internal callers that already hold a validated ``Parent`` (or ``None``) and
+        have already confirmed ``0 <= start <= end`` and, if the parent has a sequence,
+        ``end <= len(parent.sequence)``. Skips the ``make_parent`` dispatch and the redundant
+        re-validation the public constructor performs."""
+        obj = cls.__new__(cls)
+        obj.start = start
+        obj.end = end
+        obj.strand = strand
+        obj.length = end - start
+        obj._sequence = None
+        if parent is None:
+            obj.parent = None
+        else:
+            obj.parent = parent.reset_location(cls._construct(start, end, strand, None))
+        return obj
+
     def __str__(self):
         return f"{self.start}-{self.end}:{self.strand}"
 
@@ -211,11 +229,11 @@ class SingleInterval(Location):
         else:
             raise InvalidStrandException(f"Location strand must be {Strand.PLUS} or {Strand.MINUS}")
         new_parent = self.parent.strip_location_info() if self.parent else None
-        return SingleInterval(
+        return SingleInterval._construct(
             parent_start,
             parent_end,
             self.strand.relative_to(relative_strand),
-            parent=new_parent,
+            new_parent,
         )
 
     def has_overlap(
@@ -263,14 +281,28 @@ class SingleInterval(Location):
 
     def reset_strand(self, new_strand: Strand) -> "SingleInterval":
         new_parent = self.parent.strip_location_info() if self.parent else None
-        return SingleInterval(self.start, self.end, new_strand, parent=new_parent)
+        return SingleInterval._construct(self.start, self.end, new_strand, new_parent)
 
     def reset_parent(self, new_parent: Parent) -> "SingleInterval":
         parent = new_parent.strip_location_info() if new_parent else None
-        return SingleInterval(self.start, self.end, self.strand, parent)
+        if parent is not None and parent.sequence is not None and self.end > len(parent.sequence):
+            raise InvalidPositionException(
+                f"End position ({self.end}) must be <= parent length ({len(parent.sequence)})"
+            )
+        return SingleInterval._construct(self.start, self.end, self.strand, parent)
 
     def shift_position(self, shift: int) -> "SingleInterval":
-        return SingleInterval(self.start + shift, self.end + shift, self.strand, self.parent)
+        new_start = self.start + shift
+        new_end = self.end + shift
+        if not 0 <= new_start <= new_end:
+            raise InvalidPositionException(
+                f"Positions must satisfy 0 <= start <= end. Start: {new_start}, end: {new_end}"
+            )
+        if self.parent and self.parent.sequence is not None and new_end > len(self.parent.sequence):
+            raise InvalidPositionException(
+                f"End position ({new_end}) must be <= parent length ({len(self.parent.sequence)})"
+            )
+        return SingleInterval._construct(new_start, new_end, self.strand, self.parent)
 
     def distance_to(self, other: Location, distance_type: DistanceType = DistanceType.INNER) -> int:
         ObjectValidation.require_parents_equal_except_location(self.parent, other.parent)
@@ -332,7 +364,7 @@ class SingleInterval(Location):
         new_start = max(self.start, other.start)
         new_end = min(self.end, other.end)
         new_parent = self.parent.strip_location_info() if self.parent else None
-        return SingleInterval(new_start, new_end, self.strand, parent=new_parent)
+        return SingleInterval._construct(new_start, new_end, self.strand, new_parent)
 
     def union(self, other: Location) -> Location:
         if self.strand != other.strand:
@@ -347,11 +379,11 @@ class SingleInterval(Location):
         ObjectValidation.require_object_has_type(other, SingleInterval)
         new_parent = self.parent.strip_location_info() if self.parent else None
         if len(self) == 0:
-            return SingleInterval(other.start, other.end, other.strand, new_parent)
+            return SingleInterval._construct(other.start, other.end, other.strand, new_parent)
         if len(other) == 0:
-            return SingleInterval(self.start, self.end, self.strand, new_parent)
+            return SingleInterval._construct(self.start, self.end, self.strand, new_parent)
         if self.has_overlap(other):
-            return SingleInterval(
+            return SingleInterval._construct(
                 min(self.start, other.start),
                 max(self.end, other.end),
                 self.strand,
@@ -397,7 +429,17 @@ class SingleInterval(Location):
     def extend_absolute(self, extend_start: int, extend_end: int) -> Location:
         if min(extend_start, extend_end) < 0:
             raise ValueError("Extension distances must be non-negative")
-        return SingleInterval(self.start - extend_start, self.end + extend_end, self.strand, self.parent)
+        new_start = self.start - extend_start
+        new_end = self.end + extend_end
+        if not 0 <= new_start <= new_end:
+            raise InvalidPositionException(
+                f"Positions must satisfy 0 <= start <= end. Start: {new_start}, end: {new_end}"
+            )
+        if self.parent and self.parent.sequence is not None and new_end > len(self.parent.sequence):
+            raise InvalidPositionException(
+                f"End position ({new_end}) must be <= parent length ({len(self.parent.sequence)})"
+            )
+        return SingleInterval._construct(new_start, new_end, self.strand, self.parent)
 
     def extend_relative(self, extend_upstream: int, extend_downstream: int) -> Location:
         self.strand.assert_directional()
