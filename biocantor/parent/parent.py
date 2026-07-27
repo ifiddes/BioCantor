@@ -118,6 +118,7 @@ class Parent(AbstractParent):
         self.sequence = sequence
 
         self._strand_property = None
+        self._stripped = None
 
     def __eq__(self, other):
         if not self.equals_except_location(other):
@@ -178,12 +179,17 @@ class Parent(AbstractParent):
     def strip_location_info(self) -> Parent:
         """Returns a new Parent object representing this Parent with information about child
         location removed"""
-        return Parent(
-            id=self.id,
-            sequence_type=self.sequence_type,
-            sequence=self.sequence,
-            parent=self.parent,
-        )
+        if self._stripped is None:
+            if self.location is None and self._strand is None:
+                self._stripped = self
+            else:
+                self._stripped = Parent(
+                    id=self.id,
+                    sequence_type=self.sequence_type,
+                    sequence=self.sequence,
+                    parent=self.parent,
+                )
+        return self._stripped
 
     def first_ancestor_of_type(self, sequence_type: Union[str, SequenceType], include_self: bool = True) -> Parent:
         """Returns the Parent object representing the closest ancestor (parent, parent of parent, etc.)
