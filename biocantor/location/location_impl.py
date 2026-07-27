@@ -32,6 +32,8 @@ else:
 class SingleInterval(Location):
     """A single contiguous interval within a sequence"""
 
+    __slots__ = []
+
     def __init__(
         self,
         start: int,
