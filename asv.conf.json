@@ -23,6 +23,9 @@
     //
     "install_command": ["in-dir={env_dir} python -mpip install {wheel_file}[io]"],
     // "uninstall_command": ["return-code=any python -mpip uninstall -y {project}"],
+    "build_command": [
+        "PIP_NO_BUILD_ISOLATION=false python -mpip wheel --no-deps --no-index -w {build_cache_dir} {build_dir}"
+    ],
     // "build_command": [
     //     "python setup.py build",
     //     "PIP_NO_BUILD_ISOLATION=false python -mpip wheel --no-deps --no-index -w {build_cache_dir} {build_dir}"
@@ -59,7 +62,7 @@
 
     // The list of conda channel names to be searched for benchmark
     // dependency packages in the specified order
-    "conda_channels": ["bioconda", "conda-forge", "defaults"],
+    "conda_channels": ["bioconda", "conda-forge"],
 
     // A conda environment file that is used for environment creation.
     // "conda_environment_file": "environment.yml",
