@@ -545,12 +545,37 @@ class CompoundInterval(Location):
             blocks = sorted(blocks, key=lambda x: (x[0], -x[1]))
         return tuple(zip(*blocks))
 
+    @classmethod
+    def _construct(cls, starts, ends, strand, parent, presorted=False):
+        """Fast path for internal callers holding already-validated blocks (and a validated
+        Parent or None). If ``presorted`` is True, ``starts``/``ends`` MUST already be in the
+        order ``_sort_starts_ends`` would produce for ``strand`` -- the caller is responsible for
+        proving that. Skips make_parent dispatch, re-sorting (if presorted), and the redundant
+        per-block start<=end validation loop (callers must independently prove blocks stay valid)."""
+        obj = cls.__new__(cls)
+        obj.strand = strand
+        if presorted:
+            obj._starts, obj._ends = tuple(starts), tuple(ends)
+        else:
+            obj._starts, obj._ends = cls._sort_starts_ends(starts, ends, strand)
+        obj._single_interval_store = None
+        obj._is_overlapping = None
+        obj.length = sum(e - s for s, e in zip(obj._starts, obj._ends))
+        obj.start = obj._starts[0]
+        obj.end = obj._ends[-1]
+        if parent is None:
+            obj.parent = None
+        else:
+            obj.parent = parent.reset_location(cls._construct(obj._starts, obj._ends, strand, None, presorted=True))
+        return obj
+
     @property
     def _single_intervals(self):
         """Lazy evaluation; cached result"""
         if self._single_interval_store is None:
             self._single_interval_store = [
-                SingleInterval(self._starts[i], self._ends[i], self.strand, self.parent) for i in range(self.num_blocks)
+                SingleInterval._construct(self._starts[i], self._ends[i], self.strand, self.parent)
+                for i in range(self.num_blocks)
             ]
         return self._single_interval_store
 
@@ -833,7 +858,7 @@ class CompoundInterval(Location):
         if not new_starts:
             return EmptyLocation()
         new_parent = self.parent.strip_location_info() if self.parent else None
-        return CompoundInterval(new_starts, new_ends, self.strand, new_parent)
+        return CompoundInterval._construct(new_starts, new_ends, self.strand, new_parent, presorted=True)
 
     def reverse(self) -> "CompoundInterval":
         def reflect_position(relative_pos):
@@ -843,24 +868,32 @@ class CompoundInterval(Location):
         new_ends = [reflect_position(interval.start) for interval in self._single_intervals]
         new_strand = self.strand.reverse()
         new_parent = self.parent.strip_location_info() if self.parent else None
-        return CompoundInterval(new_starts, new_ends, new_strand, new_parent)
+        return CompoundInterval._construct(new_starts, new_ends, new_strand, new_parent)
 
     def reverse_strand(self) -> "CompoundInterval":
-        return CompoundInterval(self._starts, self._ends, self.strand.reverse(), self.parent)
+        return CompoundInterval._construct(self._starts, self._ends, self.strand.reverse(), self.parent)
 
     def reset_strand(self, new_strand: Strand) -> Location:
-        return CompoundInterval(self._starts, self._ends, new_strand, self.parent)
+        return CompoundInterval._construct(self._starts, self._ends, new_strand, self.parent)
 
     def reset_parent(self, new_parent: Parent) -> "CompoundInterval":
-        return CompoundInterval(self._starts, self._ends, self.strand, new_parent)
+        parent = make_parent(new_parent).strip_location_info() if new_parent else None
+        if parent is not None and parent.sequence is not None and max(self._ends) > len(parent.sequence):
+            raise InvalidPositionException(
+                f"End position ({max(self._ends)}) must be <= parent length ({len(parent.sequence)})"
+            )
+        return CompoundInterval._construct(self._starts, self._ends, self.strand, parent, presorted=True)
 
     def shift_position(self, shift: int) -> Location:
-        starts = tuple(interval.start + shift for interval in self._single_intervals)
-        ends = tuple(interval.end + shift for interval in self._single_intervals)
-        r = CompoundInterval(starts, ends, self.strand, self.parent)
-        # force evaluation of _single_intervals to do bounds checks
-        _ = r._single_intervals
-        return r
+        new_starts = tuple(s + shift for s in self._starts)
+        new_ends = tuple(e + shift for e in self._ends)
+        if new_starts[0] < 0:
+            raise InvalidPositionException(f"Positions must satisfy 0 <= start <= end. Start: {new_starts[0]}")
+        if self.parent and self.parent.sequence is not None and max(new_ends) > len(self.parent.sequence):
+            raise InvalidPositionException(
+                f"End position ({max(new_ends)}) must be <= parent length ({len(self.parent.sequence)})"
+            )
+        return CompoundInterval._construct(new_starts, new_ends, self.strand, self.parent, presorted=True)
 
     def distance_to(self, other: Location, distance_type: DistanceType = DistanceType.INNER) -> int:
         ObjectValidation.require_parents_equal_except_location(self.parent, other.parent)
