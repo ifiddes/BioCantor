@@ -70,6 +70,8 @@ class Sequence(AbstractSequence):
             self._validate_alphabet()
 
     def __eq__(self, other):
+        if self is other:
+            return True
         if type(other) is not Sequence:
             return False
         if self.id != other.id:
